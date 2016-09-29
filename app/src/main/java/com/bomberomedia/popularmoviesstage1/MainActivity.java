@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
 
     private String requestUrlBase = "https://api.themoviedb.org/3";
-    private String apiKey = "?api_key="; //TODO: Paste your api key here
+    private String apiKey;
     private String[] requestList = {"/movie/top_rated",
                                     "/movie/popular"};
 
@@ -45,8 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         movies = new ArrayList<>();
-
-        //TODO: Handle screen rotation and restore lists
+        apiKey = getResources().getString(R.string.api_key);    //stored in key.xml as a string resource, file ignored by git
 
         spinner = (Spinner) findViewById(R.id.sort_selector);
         ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this,

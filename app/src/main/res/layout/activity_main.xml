@@ -15,7 +15,7 @@
         android:id="@+id/sort_lbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sorting: "/>
+        android:text="@string/sorting"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_thumbnail_grid"
@@ -29,6 +29,7 @@
         android:id="@+id/sort_selector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/sort_lbl" />
+        android:layout_toRightOf="@id/sort_lbl"
+        android:layout_alignBaseline="@+id/sort_lbl"/>
 
 </RelativeLayout>
