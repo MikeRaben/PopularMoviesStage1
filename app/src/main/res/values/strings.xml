@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Popular Movies Stage 1</string>
     <string name="sorting">Sorting:</string>
+    <string name="movie_poster_desc" />
 
     <string-array name="movie_list_choices">
-        <item>Top Rated</item>
-        <item>Popular</item>
+        <item>Top Rated Movies</item>
+        <item>Popular Movies</item>
     </string-array>
 </resources>

@@ -1,10 +1,12 @@
 package com.bomberomedia.popularmoviesstage1;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -47,21 +49,29 @@ public class MainActivity extends AppCompatActivity {
         movies = new ArrayList<>();
         apiKey = getResources().getString(R.string.api_key);    //stored in key.xml as a string resource, file ignored by git
 
-        spinner = (Spinner) findViewById(R.id.sort_selector);
-        ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this,
-                R.array.movie_list_choices, android.R.layout.simple_spinner_dropdown_item);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        if (ab != null){
+            ab.setDisplayShowTitleEnabled(false);
+        }
+
+        spinner = new Spinner(getSupportActionBar().getThemedContext());
+
+        ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(getSupportActionBar().getThemedContext(),
+                R.array.movie_list_choices, android.R.layout.simple_spinner_item);
+        spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
 
         spinner.setAdapter(spinAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, "Top: " + topRatedJson);
-                Log.d(TAG, "Pop: " + popularJson);
                 requestUrl = requestUrlBase + requestList[position] + apiKey;
 
                 switch (position){
                     case 0:
-                        //Top Rated selected, check if json has already been pulled
+                        //Top Rated selected, check if json has already been populated
                         if (topRatedJson.length() > 1){
                             unPackMovies(topRatedJson);
                         } else {
@@ -83,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        toolbar.addView(spinner);
 
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rv_thumbnail_grid);
         mRecyclerView.setHasFixedSize(true);
@@ -136,14 +147,19 @@ public class MainActivity extends AppCompatActivity {
                     newMovie.releaseDate = movie.getString("release_date");
                     newMovie.synopsis = movie.getString("overview");
                     newMovie.rating = movie.getDouble("vote_average");
+                    newMovie.isAdult = Boolean.getBoolean(movie.getString("adult"));
 
-                    movies.add(newMovie);
+                    if (!newMovie.isAdult){
+                        movies.add(newMovie);
+                    } else {
+                        Log.d(TAG, "Adult movie ignored: " + newMovie.title);
+                    }
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
         mAdapter.notifyDataSetChanged();
     }
 
